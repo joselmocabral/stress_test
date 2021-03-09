@@ -1,8 +1,6 @@
 import argparse
 import random
-import re
 import subprocess
-import tempfile
 
 
 from stress import StressTest
@@ -70,7 +68,7 @@ class Analysis:
             timestamps = [r[1] for r in id_timestamp if r[0] == p]
             print(f"started at: {timestamps[0]}")
             print(f"ended at: {timestamps[-1]}")
-            print(f"duration: {len(timestamps)-1}")
+            print(f"duration: {len(timestamps)-1} seconds")
         
     def throughput_stats(self):
         '''
@@ -93,10 +91,10 @@ class Analysis:
         latency_results = sorted([result.latency for result in self._results])
         position_95th = int(0.95*len(latency_results))
         position_95th = position_95th - 1 if position_95th > 0 else 0
-        print(f"avg_value: {sum(latency_results)/len(latency_results)} operations/s")
-        print(f"min_value: {min(latency_results)} operations/s")
-        print(f"max_value: {max(latency_results)} operations/s")
-        print(f"95th_percentile: {latency_results[position_95th]} operations/s")
+        print(f"avg_value: {sum(latency_results)/len(latency_results)} milisseconds")
+        print(f"min_value: {min(latency_results)} milisseconds")
+        print(f"max_value: {max(latency_results)} milisseconds")
+        print(f"95th_percentile: {latency_results[position_95th]} milisseconds")
 
     def duration_generator(self):
         return self._durations.pop(random.randint(0,len(self._durations)-1))
