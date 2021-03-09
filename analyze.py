@@ -10,6 +10,9 @@ from stress import StressTest
 class Result:
 
     def __init__(self, thread_id, timestamp, throughput, latency):
+        '''
+        The result class will stores results of outputs parsed to further analyze them
+        '''
         self._thread_id = thread_id
         self._timestamp = timestamp
         self._throughput = throughput
@@ -38,10 +41,16 @@ class Analysis:
         self._durations = list(range(5, n_threads*2)) if n_threads > 15 else list(range(5, 31))
 
     def add_result(self, thread_id, timestamp, throughput, latency):
+        '''
+        This method will add a new result to the results array after being parsed
+        '''
         new_result = Result(thread_id, timestamp, throughput, latency)
         self._results.append(new_result)
 
     def extract_data(self, s):
+        '''
+        This method will parse the results
+        '''
         values = s.split(' | ')
         thread_id = str(values[0].split(' ')[-1])
         timestamp = str(values[1].split(' ')[-1])
@@ -50,6 +59,9 @@ class Analysis:
         self.add_result(thread_id, timestamp, throughput, latency)
 
     def overall_stats(self):
+        '''
+        Stats generator for the overall process
+        '''
         print("Processes Statistics Report:")
         processes = set([p.thread_id for p in self._results])
         id_timestamp = [(p.thread_id, p.timestamp) for p in self._results]
@@ -61,6 +73,9 @@ class Analysis:
             print(f"duration: {len(timestamps)-1}")
         
     def throughput_stats(self):
+        '''
+        Stats generator for the throughput
+        '''
         print("Throughput Statistics Report:")
         throughput_results = sorted([result.throughput for result in self._results])
         position_95th = int(0.95*len(throughput_results))
@@ -71,6 +86,9 @@ class Analysis:
         print(f"95th_percentile: {throughput_results[position_95th]} operations/s")
 
     def latency_stats(self):
+        '''
+        Stats generator for the latency
+        '''
         print("Latency Statistics Report:")
         latency_results = sorted([result.latency for result in self._results])
         position_95th = int(0.95*len(latency_results))
